@@ -1,0 +1,45 @@
+# Blueprint di Render: crea il servizio dal repository GitHub con "New > Blueprint".
+# Il disco persistente richiede un piano a pagamento (Starter): senza disco i dati si perdono a ogni deploy.
+services:
+  - type: web
+    name: fanart-vote
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm ci
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    disk:
+      name: fanart-data
+      mountPath: /var/data
+      sizeGB: 5
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: DATA_DIR
+        value: /var/data
+      - key: TRUST_PROXY
+        value: "1"
+      - key: MAX_SCORE
+        value: "10"
+      - key: SYNC_INTERVAL_MIN
+        value: "0"
+      # Valori segreti o specifici: Render li chiede al momento della creazione.
+      - key: BASE_URL
+        sync: false
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DISCORD_PUBLIC_KEY
+        sync: false
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: GUILD_ID
+        sync: false
+      - key: FORUM_CHANNEL_ID
+        sync: false
+      - key: VOTER_ROLE_ID
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
